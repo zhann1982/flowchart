@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru" data-th="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flowi — блок-схемы</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;800&family=Unbounded:wght@800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#efeaff;--pn:#fff;--ink:#1b1340;--tx:#1b1340;--mut:#7a71a8;--a1:#ff3d81;--a2:#6c47ff;--a3:#00c2ff;--a4:#ffd60a;--a5:#00e0a0;--sh:#1b1340}
+[data-th=dark]{--bg:#120d2b;--pn:#1e1745;--ink:#f1edff;--tx:#f1edff;--mut:#a79ed6;--sh:#000}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{display:flex;flex-direction:column;background:var(--bg);color:var(--tx);font:600 14px Manrope,system-ui,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;background:linear-gradient(100deg,var(--a2),var(--a1) 62%,#ff8a00);border-bottom:3px solid var(--ink)}
+.logo{font:800 22px Unbounded,Manrope,sans-serif;color:#fff;text-shadow:2px 2px 0 var(--sh);margin-right:6px}
+input,textarea{font:inherit;color:var(--tx);background:var(--pn);border:2px solid var(--ink);border-radius:10px;padding:6px 9px;width:100%}
+#nm{width:200px;font-weight:800}
+.b{font:800 13px Manrope,sans-serif;color:var(--tx);background:var(--pn);border:2px solid var(--ink);border-radius:10px;padding:6px 10px;box-shadow:3px 3px 0 var(--sh);cursor:pointer}
+.b:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--sh)}
+.b.p{background:var(--a4);color:#1b1340}.b:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--a3);outline-offset:1px}
+.sp{flex:1}main{flex:1;display:flex;min-height:0}
+#pal,#insp{background:var(--pn);padding:10px;display:flex;flex-direction:column;gap:9px;overflow:auto}
+#pal{width:112px;border-right:3px solid var(--ink)}#insp{width:250px;border-left:3px solid var(--ink)}
+.si{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;width:100%}.si svg{width:60px;height:34px;stroke:var(--ink);stroke-width:2.5}
+.mu{color:var(--mut);font-size:12px;line-height:1.5;margin:0}
+#cv{flex:1;position:relative;overflow:hidden;background-image:radial-gradient(var(--mut) 1.3px,transparent 1.7px);background-size:24px 24px;touch-action:none}
+#cv.ng{background-image:none}#sv{width:100%;height:100%;display:block;cursor:grab}.n{cursor:move}.hd{fill:var(--a1);stroke:#fff;stroke-width:2.5;cursor:crosshair}.e{cursor:pointer}
+#ed{position:absolute;display:none;resize:none;text-align:center;z-index:5;padding:4px;border-color:var(--a1)}
+label{font-size:12px;color:var(--mut);display:block;margin-bottom:3px}.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.sw{width:26px;height:26px;border-radius:50%;border:2.5px solid var(--ink);cursor:pointer;padding:0}
+input[type=color]{width:34px;height:28px;padding:0;border-radius:8px}input[type=range]{padding:0;accent-color:var(--a1);border:0;background:none}
+input[type=checkbox]{width:auto}
+#cm{border-top:3px solid var(--ink);background:var(--pn);height:270px;display:flex;flex-direction:column;padding:8px 14px;gap:6px}
+#cm.cl{height:46px;overflow:hidden}#cm h3{margin:0;font:800 15px Manrope;flex:1}
+#cl{list-style:none;margin:0;padding:0;overflow:auto;flex:1}
+#cl li{display:flex;gap:10px;align-items:center;padding:5px 8px;border-left:5px solid var(--a1);margin-bottom:4px;background:var(--bg);border-radius:0 8px 8px 0}
+#cl li:nth-child(even){border-color:var(--a3)}#cl li span{flex:1;word-break:break-word}#cl small{color:var(--mut)}
+#pg{display:flex;gap:5px;justify-content:center}#pg .b{padding:3px 9px;box-shadow:2px 2px 0 var(--sh)}
+#md{position:fixed;inset:0;background:#0009;display:none;place-items:center;z-index:9}
+.box{width:min(700px,94vw);max-height:84vh;overflow:auto;background:var(--pn);border:3px solid var(--ink);box-shadow:8px 8px 0 var(--a1);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.gr{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.cd{border:2px solid var(--ink);border-top:9px solid var(--a2);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}.cd small{color:var(--mut)}
+.ls{list-style:none;margin:0;padding:0}.ls li{padding:6px 0;border-bottom:1px dashed var(--mut)}.ls span{color:var(--mut);margin-right:8px;font-size:12px}
+#ts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--a5);color:#1b1340;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--sh);padding:8px 16px;border-radius:12px;font-weight:800;opacity:0;pointer-events:none;transition:.25s;z-index:10}
+#ts.on{opacity:1}
+@media(max-width:820px){main{flex-wrap:wrap}#pal{width:100%;flex-direction:row;border:0;border-bottom:3px solid var(--ink)}#pal .mu{display:none}#insp{width:100%;max-height:150px;order:3;border:0;border-top:3px solid var(--ink)}#cv{flex-basis:100%;min-height:260px;order:2}#cm{height:200px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+ <span class="logo">Flowi</span>
+ <input id="nm" maxlength="60">
+ <button class="b" id="bn" data-i="b_new"></button>
+ <button class="b" id="bt" data-i="b_tpl"></button>
+ <button class="b" id="bs" data-i="b_sv"></button>
+ <button class="b" id="bu">↶</button><button class="b" id="br">↷</button>
+ <button class="b p" id="bv" data-i="b_save"></button>
+ <button class="b" id="be" data-i="b_exp"></button>
+ <span class="sp"></span>
+ <button class="b" id="bf" data-i="b_fit"></button>
+ <button class="b" id="bg" data-i="b_grid"></button>
+ <button class="b" id="lg"></button><button class="b" id="th"></button>
+</header>
+<main>
+ <aside id="pal">
+  <b data-i="p_title"></b>
+  <button class="b si" draggable="true" data-s="rect"><svg viewBox="0 0 40 26"><rect x="3" y="4" width="34" height="18" rx="4" fill="#6c47ff"/></svg><span data-i="rect"></span></button>
+  <button class="b si" draggable="true" data-s="pill"><svg viewBox="0 0 40 26"><rect x="3" y="4" width="34" height="18" rx="9" fill="#00e0a0"/></svg><span data-i="pill"></span></button>
+  <button class="b si" draggable="true" data-s="dia"><svg viewBox="0 0 40 26"><polygon points="20,1 38,13 20,25 2,13" fill="#ffd60a"/></svg><span data-i="dia"></span></button>
+  <button class="b si" draggable="true" data-s="data"><svg viewBox="0 0 40 26"><polygon points="9,4 38,4 31,22 2,22" fill="#00c2ff"/></svg><span data-i="data"></span></button>
+  <button class="b si" draggable="true" data-s="circ"><svg viewBox="0 0 40 26"><circle cx="20" cy="13" r="11" fill="#ff3d81"/></svg><span data-i="circ"></span></button>
+  <p class="mu" data-i="p_hint"></p>
+ </aside>
+ <div id="cv">
+  <svg id="sv"><defs id="df"></defs><g id="vw"><g id="g"></g><line id="tl" stroke="#ff3d81" stroke-width="3" stroke-dasharray="6 5" style="display:none;pointer-events:none"/></g></svg>
+  <textarea id="ed"></textarea>
+ </div>
+ <aside id="insp"></aside>
+</main>
+<section id="cm">
+ <div class="row"><h3><span data-i="c_title"></span> (<span id="cn">0</span>)</h3><button class="b" id="ct">▾</button></div>
+ <div class="row"><input id="ci" maxlength="300" style="flex:1"><button class="b p" id="ca" data-i="c_add"></button></div>
+ <ul id="cl"></ul><div id="pg"></div>
+</section>
+<div id="md"><div class="box"></div></div><div id="ts"></div>
+<script>
+const $=s=>document.querySelector(s),E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const L={ru:{b_new:'Новая',b_tpl:'Шаблоны',b_sv:'Мои схемы',b_save:'Сохранить',b_exp:'Экспорт SVG',b_fit:'По размеру',b_grid:'Сетка',p_title:'Блоки',p_hint:'Перетащите на холст или нажмите',rect:'Процесс',pill:'Начало/конец',dia:'Условие',data:'Данные',circ:'Соединитель',
+i_text:'Надпись',i_shape:'Форма',i_color:'Цвет',i_font:'Размер текста',i_w:'Ширина',i_h:'Высота',i_dup:'Дублировать',i_del:'Удалить',i_lbl:'Подпись связи',i_dash:'Пунктирная линия',i_rev:'Развернуть',i_clr:'Очистить холст',
+i_none:'Выберите блок или связь. Потяните за розовую точку на краю выбранного блока, чтобы соединить его с другим. Двойной клик — изменить надпись. Колесо мыши — масштаб, перетаскивание фона — сдвиг. Delete — удалить, Ctrl+Z/Y — отмена, Ctrl+S — сохранить.',
+c_title:'Комментарии',c_ph:'Напишите комментарий к схеме…',c_add:'Добавить',c_none:'Комментариев пока нет',m_saved:'Сохранённые',m_hist:'История',m_empty:'Пока нет сохранённых схем. Нажмите «Сохранить».',m_hempty:'История пуста',m_open:'Открыть',nodes:'блоков',
+a_created:'Создана схема',a_saved:'Сохранена',a_comment:'Комментарий к',a_deleted:'Удалена',a_tpl:'Шаблон',untitled:'Без названия',savedok:'Схема сохранена',discard:'Есть несохранённые изменения. Продолжить?',delconf:'Удалить схему?',tpl_title:'Шаблоны',tpl_use:'Использовать',cdel:'Удалить комментарий'},
+en:{b_new:'New',b_tpl:'Templates',b_sv:'My charts',b_save:'Save',b_exp:'Export SVG',b_fit:'Fit view',b_grid:'Grid',p_title:'Blocks',p_hint:'Drag onto the canvas or click',rect:'Process',pill:'Start/End',dia:'Decision',data:'Data',circ:'Connector',
+i_text:'Label',i_shape:'Shape',i_color:'Color',i_font:'Font size',i_w:'Width',i_h:'Height',i_dup:'Duplicate',i_del:'Delete',i_lbl:'Link label',i_dash:'Dashed line',i_rev:'Reverse',i_clr:'Clear canvas',
+i_none:'Select a block or a link. Drag the pink dot on the edge of a selected block to connect it to another. Double-click edits the label. Wheel zooms, dragging the background pans. Delete removes, Ctrl+Z/Y undo/redo, Ctrl+S saves.',
+c_title:'Comments',c_ph:'Write a comment on this chart…',c_add:'Add',c_none:'No comments yet',m_saved:'Saved',m_hist:'History',m_empty:'No saved charts yet. Press Save.',m_hempty:'History is empty',m_open:'Open',nodes:'blocks',
+a_created:'Created chart',a_saved:'Saved',a_comment:'Comment on',a_deleted:'Deleted',a_tpl:'Template',untitled:'Untitled',savedok:'Chart saved',discard:'You have unsaved changes. Continue?',delconf:'Delete this chart?',tpl_title:'Templates',tpl_use:'Use template',cdel:'Delete comment'}};
+const DS={rect:[150,64],pill:[150,56],dia:[170,100],data:[160,64],circ:[92,92]},COL=['#ff3d81','#6c47ff','#00c2ff','#ffd60a','#00e0a0','#ff8a00','#ffffff'],DC={rect:'#6c47ff',pill:'#00e0a0',dia:'#ffd60a',data:'#00c2ff',circ:'#ff3d81'};
+const get=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}},put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast('Storage error')}};
+const P=get('fc_pref',{});let lang=P.lang||(navigator.language.startsWith('ru')?'ru':'en'),th=P.th||'light',gs=P.gs!==0;
+const t=k=>L[lang][k]||k,uid=()=>Math.random().toString(36).slice(2,9),cv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fd=d=>new Date(d).toLocaleString(lang=='ru'?'ru-RU':'en-US',{dateStyle:'short',timeStyle:'short'});
+const lum=c=>{const h=c.replace('#','');return .299*parseInt(h.slice(0,2),16)+.587*parseInt(h.slice(2,4),16)+.114*parseInt(h.slice(4,6),16)};
+let S={nodes:[],edges:[]},cur={id:null,name:''},V={x:60,y:60,k:1},sel=null,U=[],R=[],cp=0,drag=null,dirty=0,lastId=0,lastT=0;
+const sv=$('#sv'),obj=()=>sel&&(sel.k=='n'?S.nodes:S.edges).find(x=>x.id==sel.id);
+function toast(m){const e=$('#ts');e.textContent=m;e.classList.add('on');clearTimeout(e.h);e.h=setTimeout(()=>e.classList.remove('on'),1800)}
+function snap(){U.push(JSON.stringify(S));if(U.length>80)U.shift();R=[];dirty=1}
+function undo(){if(!U.length)return;R.push(JSON.stringify(S));S=JSON.parse(U.pop());sel=null;draw();insp()}
+function redo(){if(!R.length)return;U.push(JSON.stringify(S));S=JSON.parse(R.pop());sel=null;draw();insp()}
+/* geometry */
+function anc(n,o){const cx=n.x+n.w/2,cy=n.y+n.h/2,dx=o.x+o.w/2-cx,dy=o.y+o.h/2-cy;
+ if(Math.abs(dx)*n.h>Math.abs(dy)*n.w)return{x:dx>0?n.x+n.w:n.x,y:cy,h:1};return{x:cx,y:dy>0?n.y+n.h:n.y,h:0}}
+function ep(e){const a=S.nodes.find(n=>n.id==e.a),b=S.nodes.find(n=>n.id==e.b);if(!a||!b)return null;
+ const p=anc(a,b),q=anc(b,a),mx=(p.x+q.x)/2,my=(p.y+q.y)/2,c1=p.h?[mx,p.y]:[p.x,my],c2=q.h?[mx,q.y]:[q.x,my];
+ return{d:`M${p.x},${p.y}C${c1} ${c2} ${q.x},${q.y}`,lx:(p.x+3*c1[0]+3*c2[0]+q.x)/8,ly:(p.y+3*c1[1]+3*c2[1]+q.y)/8}}
+/* markup */
+const defs=I=>`<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="${I}"/></marker>`;
+function nd(n,I,ex){const s=n.s,w=n.w,h=n.h;let sh;
+ if(s=='dia')sh=`<polygon points="${w/2},0 ${w},${h/2} ${w/2},${h} 0,${h/2}"/>`;
+ else if(s=='data')sh=`<polygon points="18,0 ${w},0 ${w-18},${h} 0,${h}"/>`;
+ else if(s=='circ')sh=`<ellipse cx="${w/2}" cy="${h/2}" rx="${w/2}" ry="${h/2}"/>`;
+ else sh=`<rect width="${w}" height="${h}" rx="${s=='pill'?h/2:12}"/>`;
+ const tc=lum(n.c)>150?'#1b1340':'#fff',ins=s=='dia'?w*.2:s=='data'?20:s=='circ'?w*.12:8,on=!ex&&sel&&sel.k=='n'&&sel.id==n.id;
+ let x=`<g class="n" data-id="${n.id}" transform="translate(${n.x} ${n.y})"><g fill="${n.c}" stroke="${I}" stroke-width="2.5"${ex?'':' style="filter:drop-shadow(4px 4px 0 var(--sh))"'}>${sh}</g>`+
+ `<foreignObject x="${ins}" y="4" width="${Math.max(10,w-2*ins)}" height="${h-8}"><div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;font:800 ${n.f}px Manrope,Arial,sans-serif;color:${tc};overflow:hidden;word-break:break-word;line-height:1.15;pointer-events:none">${E(n.t).replace(/\n/g,'<br>')}</div></foreignObject>`;
+ if(on)x+=`<rect x="-7" y="-7" width="${w+14}" height="${h+14}" rx="8" fill="none" stroke="#ff3d81" stroke-width="2" stroke-dasharray="6 4" pointer-events="none"/>`+[[w/2,0],[w,h/2],[w/2,h],[0,h/2]].map(p=>`<circle class="hd" cx="${p[0]}" cy="${p[1]}" r="7"/>`).join('');
+ return x+'</g>'}
+function eh(I,BG,ex){return S.edges.map(e=>{const g=ep(e);if(!g)return'';const on=!ex&&sel&&sel.k=='e'&&sel.id==e.id;
+ return `<g class="e" data-id="${e.id}"><path d="${g.d}" fill="none" stroke="transparent" stroke-width="16"/><path d="${g.d}" fill="none" stroke="${on?'#ff3d81':I}" stroke-width="${on?3.5:2.5}"${e.z?' stroke-dasharray="8 6"':''} marker-end="url(#ar)"/>`+
+ (e.l?`<text x="${g.lx}" y="${g.ly}" text-anchor="middle" dominant-baseline="middle" font-family="Manrope,Arial,sans-serif" font-weight="800" font-size="13" fill="${I}" stroke="${BG}" stroke-width="6" paint-order="stroke">${E(e.l)}</text>`:'')+'</g>'}).join('')}
+function draw(){const I=cv('--ink');$('#df').innerHTML=defs(I);$('#g').innerHTML=eh(I,cv('--bg'))+S.nodes.map(n=>nd(n,I)).join('')}
+function setV(){$('#vw').setAttribute('transform',`translate(${V.x} ${V.y}) scale(${V.k})`);const c=$('#cv').style;c.backgroundSize=24*V.k+'px '+24*V.k+'px';c.backgroundPosition=V.x+'px '+V.y+'px'}
+function bb(){let a=1e9,b=1e9,c=-1e9,d=-1e9;S.nodes.forEach(n=>{a=Math.min(a,n.x);b=Math.min(b,n.y);c=Math.max(c,n.x+n.w);d=Math.max(d,n.y+n.h)});return[a,b,c,d]}
+function fit(){const r=sv.getBoundingClientRect();if(!S.nodes.length){V={x:r.width/2,y:r.height/2,k:1};return setV()}
+ const[a,b,c,d]=bb(),k=Math.min(1.2,(r.width-100)/(c-a),(r.height-100)/(d-b));V={k,x:(r.width-(c-a)*k)/2-a*k,y:(r.height-(d-b)*k)/2-b*k};setV()}
+const wp=ev=>{const r=sv.getBoundingClientRect();return{x:(ev.clientX-r.left-V.x)/V.k,y:(ev.clientY-r.top-V.y)/V.k}};
+/* editing */
+function addN(s,x,y){snap();const d=DS[s],n={id:uid(),s,x:Math.round(x/10)*10,y:Math.round(y/10)*10,w:d[0],h:d[1],t:t(s),c:DC[s],f:14};S.nodes.push(n);select('n',n.id)}
+function select(k,id){sel=k?{k,id}:null;draw();insp()}
+function del(){if(!sel)return;snap();if(sel.k=='n'){S.nodes=S.nodes.filter(n=>n.id!=sel.id);S.edges=S.edges.filter(e=>e.a!=sel.id&&e.b!=sel.id)}else S.edges=S.edges.filter(e=>e.id!=sel.id);sel=null;draw();insp()}
+function edit(k,id){const o=(k=='n'?S.nodes:S.edges).find(x=>x.id==id);if(!o)return;let x,y,w,h;
+ if(k=='n'){x=o.x;y=o.y;w=o.w;h=o.h}else{const g=ep(o);x=g.lx-55;y=g.ly-16;w=110;h=32}
+ const ta=$('#ed'),key=k=='n'?'t':'l';ta.style.cssText=`display:block;left:${x*V.k+V.x}px;top:${y*V.k+V.y}px;width:${w*V.k}px;height:${Math.max(h*V.k,34)}px`;
+ ta.value=o[key];ta.focus();ta.select();
+ const done=ok=>{ta.onblur=null;ta.style.display='none';if(ok&&ta.value!==o[key]){snap();o[key]=ta.value;draw();insp()}};
+ ta.onblur=()=>done(1);ta.onkeydown=e=>{if(e.key=='Enter'&&!e.shiftKey){e.preventDefault();ta.blur()}if(e.key=='Escape')done(0)}}
+/* canvas events */
+sv.addEventListener('pointerdown',ev=>{if(ev.button)return;if(document.activeElement)document.activeElement.blur();ev.preventDefault();
+ const hd=ev.target.closest('.hd'),n=ev.target.closest('.n'),e=ev.target.closest('.e'),p=wp(ev),id=n?n.dataset.id:e?e.dataset.id:0,now=Date.now();
+ if(hd){drag={m:'c',id};return}
+ if(id&&id==lastId&&now-lastT<400){lastT=0;edit(n?'n':'e',id);return}lastId=id;lastT=now;
+ if(n){const o=S.nodes.find(x=>x.id==id);if(!sel||sel.id!=id)select('n',id);drag={m:'m',o,dx:p.x-o.x,dy:p.y-o.y,mv:0}}
+ else if(e)select('e',id);else{if(sel)select(null);drag={m:'p',sx:ev.clientX-V.x,sy:ev.clientY-V.y}}});
+window.addEventListener('pointermove',ev=>{if(!drag)return;const p=wp(ev);
+ if(drag.m=='m'){if(!drag.mv){snap();drag.mv=1}drag.o.x=Math.round((p.x-drag.dx)/10)*10;drag.o.y=Math.round((p.y-drag.dy)/10)*10;draw()}
+ else if(drag.m=='p'){V.x=ev.clientX-drag.sx;V.y=ev.clientY-drag.sy;setV()}
+ else{const o=S.nodes.find(x=>x.id==drag.id),l=$('#tl');l.style.display='';l.setAttribute('x1',o.x+o.w/2);l.setAttribute('y1',o.y+o.h/2);l.setAttribute('x2',p.x);l.setAttribute('y2',p.y)}});
+window.addEventListener('pointerup',ev=>{if(!drag)return;if(drag.m=='c'){$('#tl').style.display='none';const el=document.elementFromPoint(ev.clientX,ev.clientY),n=el&&el.closest&&el.closest('.n');
+ if(n&&n.dataset.id!=drag.id&&!S.edges.some(e=>e.a==drag.id&&e.b==n.dataset.id)){snap();const ed={id:uid(),a:drag.id,b:n.dataset.id,l:'',z:0};S.edges.push(ed);select('e',ed.id)}}drag=null});
+sv.addEventListener('wheel',ev=>{ev.preventDefault();const r=sv.getBoundingClientRect(),mx=ev.clientX-r.left,my=ev.clientY-r.top,k=Math.min(2.5,Math.max(.2,V.k*(ev.deltaY<0?1.1:.9)));V.x=mx-(mx-V.x)*k/V.k;V.y=my-(my-V.y)*k/V.k;V.k=k;setV()},{passive:false});
+sv.addEventListener('dragover',e=>e.preventDefault());
+sv.addEventListener('drop',e=>{e.preventDefault();const s=e.dataTransfer.getData('text/plain');if(DS[s]){const p=wp(e);addN(s,p.x-DS[s][0]/2,p.y-DS[s][1]/2)}});
+document.querySelectorAll('.si').forEach(b=>{b.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',b.dataset.s));
+ b.addEventListener('click',()=>{const r=sv.getBoundingClientRect(),o=(S.nodes.length%6)*24,d=DS[b.dataset.s];addN(b.dataset.s,(r.width/2-V.x)/V.k-d[0]/2+o,(r.height/2-V.y)/V.k-d[1]/2+o)})});
+document.addEventListener('keydown',e=>{const tg=e.target.tagName,inp=tg=='INPUT'||tg=='TEXTAREA';
+ if((e.ctrlKey||e.metaKey)&&e.key=='s'){e.preventDefault();save()}
+ else if(!inp&&(e.ctrlKey||e.metaKey)&&e.key=='z'){e.preventDefault();e.shiftKey?redo():undo()}
+ else if(!inp&&(e.ctrlKey||e.metaKey)&&e.key=='y'){e.preventDefault();redo()}
+ else if(!inp&&(e.key=='Delete'||e.key=='Backspace')){e.preventDefault();del()}
+ else if(e.key=='Escape'&&!inp)select(null)});
+/* inspector */
+function insp(){const o=obj(),el=$('#insp');
+ if(!o){el.innerHTML=`<p class="mu">${t('i_none')}</p><button class="b" data-a="clr">${t('i_clr')}</button>`;return}
+ if(sel.k=='n')el.innerHTML=`<div><label>${t('i_text')}</label><textarea rows="3" data-f="t">${E(o.t)}</textarea></div>
+ <div><label>${t('i_shape')}</label><div class="row">${Object.keys(DS).map(s=>`<button class="b ${o.s==s?'p':''}" style="padding:4px 7px" data-a="sh" data-v="${s}">${t(s)}</button>`).join('')}</div></div>
+ <div><label>${t('i_color')}</label><div class="row">${COL.map(c=>`<button class="sw" style="background:${c}" data-a="c" data-v="${c}" aria-label="${c}"></button>`).join('')}<input type="color" data-f="c" value="${o.c}"></div></div>
+ <div><label>${t('i_font')}: ${o.f}</label><input type="range" min="10" max="32" value="${o.f}" data-f="f"></div>
+ <div><label>${t('i_w')}</label><input type="range" min="70" max="340" value="${o.w}" data-f="w"></div>
+ <div><label>${t('i_h')}</label><input type="range" min="40" max="240" value="${o.h}" data-f="h"></div>
+ <div class="row"><button class="b" data-a="dup">${t('i_dup')}</button><button class="b" style="background:var(--a1);color:#fff" data-a="del">${t('i_del')}</button></div>`;
+ else el.innerHTML=`<div><label>${t('i_lbl')}</label><input data-f="l" value="${E(o.l)}"></div>
+ <label class="row"><input type="checkbox" data-f="z" ${o.z?'checked':''}> ${t('i_dash')}</label>
+ <div class="row"><button class="b" data-a="rev">${t('i_rev')}</button><button class="b" style="background:var(--a1);color:#fff" data-a="del">${t('i_del')}</button></div>`}
+$('#insp').addEventListener('focusin',e=>{if(e.target.dataset.f)snap()});
+$('#insp').addEventListener('input',e=>{const f=e.target.dataset.f,o=obj();if(!f||!o)return;const x=e.target;o[f]=x.type=='range'?+x.value:x.type=='checkbox'?(x.checked?1:0):x.value;draw();if(x.type=='range'&&f=='f')x.previousElementSibling.textContent=t('i_font')+': '+x.value});
+$('#insp').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,o=obj(),v=b.dataset.v;
+ if(a=='clr'){snap();S={nodes:[],edges:[]};draw();return}if(a=='del')return del();if(!o)return;snap();
+ if(a=='sh'){o.s=v;draw();insp()}else if(a=='c'){o.c=v;draw();insp()}else if(a=='rev'){[o.a,o.b]=[o.b,o.a];draw()}
+ else if(a=='dup'){const n={...o,id:uid(),x:o.x+30,y:o.y+30};S.nodes.push(n);select('n',n.id)}});
+/* storage */
+const cs=()=>get('fc_charts',[]);
+function lg(a,n){const l=get('fc_log',[]);l.unshift({t:Date.now(),a,n});put('fc_log',l.slice(0,60))}
+function save(){const all=cs(),name=$('#nm').value.trim()||t('untitled');let c=all.find(x=>x.id==cur.id);
+ if(!c){c={id:uid(),cm:[]};all.unshift(c);cur.id=c.id;lg('created',name)}else lg('saved',name);
+ c.name=name;c.data=JSON.parse(JSON.stringify(S));c.up=Date.now();put('fc_charts',all);cur.name=name;dirty=0;toast(t('savedok'));cmr()}
+const ok=()=>!dirty||confirm(t('discard'));
+function load(data,name,id){S=JSON.parse(JSON.stringify(data));cur={id,name};$('#nm').value=name;U=[];R=[];sel=null;dirty=0;cp=0;draw();insp();fit();cmr()}
+function openC(id){const c=cs().find(x=>x.id==id);if(c){load(c.data,c.name,c.id);cl()}}
+function rmC(id){if(!confirm(t('delconf')))return;const all=cs(),c=all.find(x=>x.id==id);put('fc_charts',all.filter(x=>x.id!=id));if(c)lg('deleted',c.name);if(cur.id==id)cur.id=null;mSaved('s');cmr()}
+/* templates */
+const TP=[{n:['Blank starter','Заготовка'],N:[['s','pill',0,0,'Start','Старт'],['p','rect',0,100,'Process','Процесс'],['d','dia',-10,210,'Condition','Условие'],['e','pill',0,350,'End','Конец']],E:[['s','p'],['p','d'],['d','e','Yes','Да']]},
+{n:['Login flow','Вход в систему'],N:[['s','pill',0,0,'Start','Старт'],['a','data',-5,100,'Enter login & password','Ввод логина и пароля'],['b','dia',-10,220,'Credentials valid?','Данные верны?'],['d','pill',0,390,'Open dashboard','Открыть кабинет'],['c','rect',270,246,'Show error','Показать ошибку','#ff3d81']],E:[['s','a'],['a','b'],['b','d','Yes','Да'],['b','c','No','Нет'],['c','a']]},
+{n:['Bug triage','Разбор бага'],N:[['s','pill',0,0,'Bug reported','Найден баг'],['d1','dia',-10,100,'Reproducible?','Воспроизводится?'],['r','rect',270,124,'Ask for details','Запросить детали','#00c2ff'],['d2','dia',-10,250,'Critical?','Критичный?'],['f','rect',-240,274,'Fix now','Чинить сейчас','#ff3d81'],['k','rect',270,274,'Add to backlog','В бэклог','#ff8a00'],['e','pill',0,410,'Done','Готово']],E:[['s','d1'],['d1','d2','Yes','Да'],['d1','r','No','Нет'],['d2','f','Yes','Да'],['d2','k','No','Нет'],['f','e'],['k','e']]},
+{n:['Order processing','Обработка заказа'],N:[['s','pill',0,0,'Order placed','Заказ оформлен'],['d','dia',-10,100,'In stock?','Есть на складе?'],['p','rect',0,250,'Charge payment','Списать оплату'],['h','rect',0,350,'Ship order','Отправить заказ','#00c2ff'],['e','pill',0,450,'Delivered','Доставлен'],['n','rect',270,124,'Notify: out of stock','Сообщить об отсутствии','#ff3d81']],E:[['s','d'],['d','p','Yes','Да'],['d','n','No','Нет'],['p','h'],['h','e']]}];
+function loadT(i){const T=TP[i],r=lang=='ru'?1:0;load({nodes:T.N.map(a=>{const d=DS[a[1]];return{id:a[0],s:a[1],x:a[2],y:a[3],w:d[0],h:d[1],t:a[4+r],c:a[6]||DC[a[1]],f:14}}),
+ edges:T.E.map((a,j)=>({id:'e'+j,a:a[0],b:a[1],l:a[2]?a[2+r]:'',z:0}))},T.n[r],null);dirty=i>0?1:0;if(i>0)lg('a_tpl'.slice(2),T.n[r]);cl()}
+/* modals */
+const cl=()=>$('#md').style.display='none',show=h=>{$('#md .box').innerHTML=h;$('#md').style.display='grid'};
+function mSaved(tab){const a=cs();let h=`<div class="row"><button class="b ${tab!='h'?'p':''}" data-a="tab" data-v="s">${t('m_saved')}</button><button class="b ${tab=='h'?'p':''}" data-a="tab" data-v="h">${t('m_hist')}</button><span class="sp"></span><button class="b" data-a="close">✕</button></div>`;
+ if(tab=='h'){const l=get('fc_log',[]);h+=l.length?`<ul class="ls">${l.map(x=>`<li><span>${fd(x.t)}</span><b>${t('a_'+x.a)}</b> ${E(x.n)}</li>`).join('')}</ul>`:`<p class="mu">${t('m_hempty')}</p>`}
+ else h+=a.length?`<div class="gr">${a.map((c,i)=>`<div class="cd" style="border-top-color:${COL[i%6]}"><b>${E(c.name)}</b><small>${fd(c.up)} · ${c.data.nodes.length} ${t('nodes')} · 💬 ${c.cm.length}</small><div class="row"><button class="b p" data-a="open" data-v="${c.id}">${t('m_open')}</button><button class="b" data-a="rm" data-v="${c.id}">🗑</button></div></div>`).join('')}</div>`:`<p class="mu">${t('m_empty')}</p>`;show(h)}
+function mTpl(){show(`<div class="row"><b style="flex:1;font-size:17px">${t('tpl_title')}</b><button class="b" data-a="close">✕</button></div><div class="gr">${TP.map((x,i)=>`<div class="cd" style="border-top-color:${COL[i]}"><b>${x.n[lang=='ru'?1:0]}</b><small>${x.N.length} ${t('nodes')}</small><button class="b p" data-a="tpl" data-v="${i}">${t('tpl_use')}</button></div>`).join('')}</div>`)}
+$('#md').addEventListener('click',e=>{if(e.target.id=='md')return cl();const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,v=b.dataset.v;
+ if(a=='close')cl();else if(a=='tab')mSaved(v);else if(a=='open'){if(ok())openC(v)}else if(a=='rm')rmC(v);else if(a=='tpl'){if(ok())loadT(+v)}});
+/* comments */
+function cmr(){const c=cs().find(x=>x.id==cur.id),a=c?[...c.cm].reverse():[],pages=Math.max(1,Math.ceil(a.length/5));cp=Math.min(cp,pages-1);$('#cn').textContent=a.length;
+ $('#cl').innerHTML=a.length?a.slice(cp*5,cp*5+5).map(m=>`<li><span>${E(m.x)}</span><small>${fd(m.t)}</small><button class="b" style="padding:2px 8px;box-shadow:none" data-d="${m.id}" title="${t('cdel')}">✕</button></li>`).join(''):`<li style="border-color:var(--mut)"><span class="mu">${t('c_none')}</span></li>`;
+ $('#pg').innerHTML=a.length>5?`<button class="b" data-p="${cp-1}" ${cp?'':'disabled'}>‹</button>`+Array.from({length:pages},(_,i)=>`<button class="b ${i==cp?'p':''}" data-p="${i}">${i+1}</button>`).join('')+`<button class="b" data-p="${cp+1}" ${cp<pages-1?'':'disabled'}>›</button>`:''}
+function addC(){const x=$('#ci').value.trim();if(!x)return;if(!cur.id)save();const all=cs(),c=all.find(q=>q.id==cur.id);c.cm.push({id:uid(),t:Date.now(),x});put('fc_charts',all);lg('comment',c.name);$('#ci').value='';cp=0;cmr()}
+$('#ca').onclick=addC;$('#ci').onkeydown=e=>{if(e.key=='Enter')addC()};
+$('#pg').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(b&&!b.disabled){cp=+b.dataset.p;cmr()}});
+$('#cl').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b)return;const all=cs(),c=all.find(q=>q.id==cur.id);c.cm=c.cm.filter(m=>m.id!=b.dataset.d);put('fc_charts',all);cmr()});
+$('#ct').onclick=()=>{$('#cm').classList.toggle('cl');$('#ct').textContent=$('#cm').classList.contains('cl')?'▴':'▾'};
+/* export */
+function exp(){if(!S.nodes.length)return;const I=cv('--ink'),BG=cv('--bg');let[x1,y1,x2,y2]=bb();x1-=40;y1-=40;x2+=50;y2+=50;const w=x2-x1,h=y2-y1;
+ const s=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x1} ${y1} ${w} ${h}" width="${w}" height="${h}"><rect x="${x1}" y="${y1}" width="${w}" height="${h}" fill="${BG}"/><defs>${defs(I)}</defs>${eh(I,BG,1)}${S.nodes.map(n=>nd(n,I,1)).join('')}</svg>`;
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:'image/svg+xml'}));a.download=(cur.name||$('#nm').value||'flowchart')+'.svg';a.click()}
+/* header */
+function apply(){document.documentElement.lang=lang;document.documentElement.dataset.th=th;document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
+ $('#nm').placeholder=t('untitled');$('#ci').placeholder=t('c_ph');$('#lg').textContent=lang=='ru'?'EN':'RU';$('#th').textContent=th=='dark'?'☀':'☾';$('#cv').classList.toggle('ng',!gs)}
+const pf=()=>put('fc_pref',{lang,th,gs:gs?1:0});
+$('#bn').onclick=()=>{if(ok()){load({nodes:[],edges:[]},'',null)}};$('#bt').onclick=mTpl;$('#bs').onclick=()=>mSaved('s');
+$('#bu').onclick=undo;$('#br').onclick=redo;$('#bv').onclick=save;$('#be').onclick=exp;$('#bf').onclick=fit;
+$('#bg').onclick=()=>{gs=!gs;apply();pf()};
+$('#lg').onclick=()=>{lang=lang=='ru'?'en':'ru';apply();insp();cmr();pf()};
+$('#th').onclick=()=>{th=th=='dark'?'light':'dark';apply();draw();pf()};
+apply();loadT(0);dirty=0;
+</script>
+</body>
+</html>
